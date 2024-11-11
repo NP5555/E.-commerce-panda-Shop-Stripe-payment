@@ -8,24 +8,32 @@ const cartSlice = createSlice({
     initialState,
     reducers: {
         addToCart(state, action){
-            const {productId, quantity} = action.payload;
+            const {productId, quantity, name} = action.payload;
             const indexProductId = (state.items).findIndex(item => item.productId === productId);
             if(indexProductId >= 0){
                 state.items[indexProductId].quantity += quantity;
             }else{
-                state.items.push({productId, quantity});
+                // Ensure name is included when adding new item
+                state.items.push({
+                    productId,
+                    quantity,
+                    name: name || 'Unknown Product' // Fallback name if undefined
+                });
             }
             localStorage.setItem("carts", JSON.stringify(state.items));
         },
+        
         changeQuantity(state, action){
-            const {productId, quantity} = action.payload;
-            const indexProductId = (state.items).findIndex(item => item.productId === productId);
-            if(quantity > 0){
-                state.items[indexProductId].quantity = quantity;
-            }else{
-                state.items = (state.items).filter(item => item.productId !== productId);
+            const {productId, quantity, name} = action.payload;
+            const indexProductId = state.items.findIndex(item => item.productId === productId);
+            if(indexProductId >= 0){
+                state.items[indexProductId] = {
+                    ...state.items[indexProductId],
+                    quantity,
+                    name    // Make sure to update the name
+                };
+                localStorage.setItem("carts", JSON.stringify(state.items));
             }
-            localStorage.setItem("carts", JSON.stringify(state.items));
         },
         toggleStatusTab(state){
             if(state.statusTab === false){

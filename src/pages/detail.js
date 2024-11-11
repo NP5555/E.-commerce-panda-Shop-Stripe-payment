@@ -24,9 +24,16 @@ const Detail = () => {
         setQuantity(quantity + 1);
     }
     const handleAddToCart = () => {
+        console.log('Detail object:', detail); // Debug log to check detail data
+        if (!detail || !detail.name) {
+            console.error('Product detail or name is missing!');
+            return;
+        }
+        
         dispatch(addToCart({
             productId: detail.id,
-            quantity: quantity
+            quantity: quantity,
+            name: detail.name
         }));
     }
   return (

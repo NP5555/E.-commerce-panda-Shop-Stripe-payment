@@ -7,22 +7,34 @@ const CartItem = (props) => {
     const {productId, quantity} = props.data;
     const [detail, setDetail] = useState([]);
     const dispatch = useDispatch();
+
     useEffect(() => {
-        const findDetail = products.filter(product => product.id === productId)[0];
-        setDetail(findDetail);
-    }, [productId])
+        const findDetail = products.find(product => product.id === productId);
+        if (findDetail) {
+            setDetail(findDetail);
+            dispatch(changeQuantity({
+                productId: productId,
+                quantity: quantity,
+                name: findDetail.name
+            }));
+        }
+    }, [productId, dispatch, quantity]);
+
     const handleMinusQuantity = () => {
         dispatch(changeQuantity({
             productId: productId,
-            quantity: quantity - 1
+            quantity: quantity - 1,
+            name: detail.name
         }));
     }
     const handlePlusQuantity = () => {
         dispatch(changeQuantity({
             productId: productId,
-            quantity: quantity + 1
+            quantity: quantity + 1,
+            name: detail.name
         }));
     }
+    
   return (
     <div className='flex justify-between items-center bg-slate-600 text-white p-2 border-b-2 border-slate-700 gap-5 rounded-md'>
         <img src={detail.image} alt="" className='w-12'/>
