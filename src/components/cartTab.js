@@ -12,29 +12,28 @@ const CartTab = () => {
         dispatch(toggleStatusTab());
     }
 
-    // payment integration
     const makepayment = async () => {
         const stripe = await loadStripe('pk_test_51QFzY7RsAkBPZnqDlmWkC5bOTEJPBscoRg1Hqc5XJGMMddkxGiP69zjn1aryKjkXxU1Vtaa7ScCzuely4VlL6JN5004jWgolbg');
 
-        const body = {
-            products: carts
-        }
-        console.log(carts)
-        const headers = {
-            'Content-Type': "application/json"
-        }
+        const body = { products: carts };
+        const headers = { 'Content-Type': "application/json" };
 
-        const responce = await fetch("", {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(body)
-        });
-        const session = await responce.json();
-        const result = stripe.redirectToCheckout({
-            session: session.id
-        })
+        try {
+            const response = await fetch("http://localhost:3000/api/create-checkout-session", {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(body)
+            });
+            const session = await response.json();
+            const result = await stripe.redirectToCheckout({ sessionId: session.id });
 
-    }
+            if (result.error) {
+                console.error("Stripe Checkout Error:", result.error.message);
+            }
+        } catch (error) {
+            console.error("Payment initiation failed:", error);
+        }
+    };
 
 
     return (

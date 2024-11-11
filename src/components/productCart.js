@@ -11,6 +11,7 @@ const ProductCart = (props) => {
     const dispatch = useDispatch();
     const handleAddToCart = () => {
         dispatch(addToCart({
+            product:name,
             productId: id,
             quantity: 1
         }));
