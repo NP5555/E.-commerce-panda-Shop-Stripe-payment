@@ -16,4 +16,4 @@
 
 # Panda-Shop Backend Code Preview
 
-<img src="./src/assets/previews/Screenshot 2024-11-17 215340.png">
+<img src="./src/assets/previews/backendCode Preview PandaShop.png">
